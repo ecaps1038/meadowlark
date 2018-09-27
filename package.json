@@ -1,0 +1,23 @@
+{
+  "name": "meadowlark",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "one"
+  ],
+  "author": "yike",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "zombie": "^6.1.3"
+  }
+}
