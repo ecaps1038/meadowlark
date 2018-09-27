@@ -27,21 +27,33 @@ function getWeatherData(){
 	};
 }
 
-
 var express = require('express');
-var handlebars = require('express-handlebars');
+//var handlebars = require('express-handlebars');
+
 
 var app = express();
+
+var handlebars = require('express-handlebars').create({
+	defaultLayout: 'main',
+    extname: '.hbs',
+	helpers: {
+	       section: function(name, options){
+	            if(!this._sections) this._sections = {};
+	            this._sections[name] = options.fn(this);
+	            return null;
+	       }
+	    }
+});
 
 //添加static中间价
 app.use(express.static(__dirname + '/public'));
 
 //设置handlebars视图引擎
-app.engine('hbs', handlebars({
-  //layoutsDir: 'views/layouts',
-  defaultLayout: 'main',
-  extname: '.hbs'
-}));
+app.engine('hbs',handlebars.engine);
+// app.engine('hbs', handlebars({
+//   defaultLayout: 'main',
+//   extname: '.hbs'
+// }));
 app.set('view engine', 'hbs');
 
 app.set('port',process.env.PORT || 3000);
@@ -52,6 +64,13 @@ app.use(function(req,res,next){
 	next();
 });
 
+//天气中间介
+app.use(function(req, res, next){
+	if(!res.locals.partials) res.locals.partials = {};
+	res.locals.partials = getWeatherData(); 
+	next();
+});
+
 //添加路由
 // app.get('/',function(req,res){
 // 	res.type('text/html');
@@ -59,6 +78,9 @@ app.use(function(req,res,next){
 // });
 app.get('/',function(req,res){
 	res.render('home',{layout:null});
+});
+app.get('/jquery',function(req,res){
+	res.render('jquerytest');
 });
 app.get('/about', function(req, res){ 
     res.render('about',{
@@ -73,12 +95,19 @@ app.get('/tours/request-group-rate',function(req,res){
 	res.render('tours/request-group-rate');
 });
 
-//天气
-app.use(function(req,res,next){
-	if(!res.locals.partials) res.locals.partials = {};
-	res.locals.partials.weather = getWeatherData();
-	next();
+//段落
+app.get('/nursery-rhyme', function(req, res){
+           res.render('nursery-rhyme');
 });
+app.get('/data/nursery-rhyme', function(req, res){
+        res.json({
+                    animal: 'squirrel',
+                    bodyPart: 'tail',
+                    adjective: 'bushy',
+                    noun: 'heck',
+        });
+});
+
 
 //定制404页面
 app.use(function(req,res,next){
