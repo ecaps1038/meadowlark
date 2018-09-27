@@ -1,3 +1,33 @@
+//虚拟天气
+function getWeatherData(){
+	return {
+		locations:[
+			{
+				name: 'Portland',
+				forecastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
+				iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
+				weather: 'Overcast',
+				temp: '54.1 F (12.3 C)'
+			},
+			{
+				name: 'Bend',
+				forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
+				iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
+				weather: 'Partly Cloudy',
+				temp: '55.0 F (12.8 C)'
+			},
+			{
+				name: 'Manzanita',
+				forecastUrl: 'http://www.wunderground.com/US/OR/Manzanita.html',
+				iconUrl: 'http://icons-ak.wxug.com/i/c/k/rain.gif',
+				weather: 'Light Rain',
+				temp: '55.0 F (12.8 C)'
+			}
+		]
+	};
+}
+
+
 var express = require('express');
 var handlebars = require('express-handlebars');
 
@@ -28,7 +58,7 @@ app.use(function(req,res,next){
 // 	res.send('<h2>你在首页里</h2>');
 // });
 app.get('/',function(req,res){
-	res.render('home');
+	res.render('home',{layout:null});
 });
 app.get('/about', function(req, res){ 
     res.render('about',{
@@ -41,6 +71,13 @@ app.get('/tours/hood-river',function(req,res){
 });
 app.get('/tours/request-group-rate',function(req,res){
 	res.render('tours/request-group-rate');
+});
+
+//天气
+app.use(function(req,res,next){
+	if(!res.locals.partials) res.locals.partials = {};
+	res.locals.partials.weather = getWeatherData();
+	next();
 });
 
 //定制404页面

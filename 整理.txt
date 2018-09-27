@@ -1,0 +1,23 @@
+app.get 是我们添加路由的方法。
+
+app.use 是Express 添加中间件的一种方法。
+现在你可以把它看作处理所有没有路由匹配路径的处理器
+
+QA质量保证
+测试
+测试框架，这里用的是Mocha
+npm install --save-dev mocha
+cp node_modules/mocha/mocha.js public/vendor
+cp node_modules/mocha/mocha.css public/vendor
+
+测试通常需要一个assert（或expect）函数用chai
+npm install --save-dev chai
+cp node_modules/chai/chai.js public/vendor
+
+持续集成 CI
+
+请求体
+如果POST 请求需要支持文件上传，则媒体类型是multipart/form-data。最后是AJAX 请求，它可以使用application/json。
+
+局部文件partials
+引用天气插件
