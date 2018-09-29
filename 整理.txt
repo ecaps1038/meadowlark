@@ -17,7 +17,7 @@ cp node_modules/chai/chai.js public/vendor
 持续集成 CI
 
 请求体
-如果POST 请求需要支持文件上传，则媒体类型是multipart/form-data。最后是AJAX 请求，它可以使用application/json。
+如果POST 默认为application/x-wwwform-urlencoded，请求需要支持文件上传，则媒体类型是multipart/form-data。最后是AJAX 请求，它可以使用application/json。
 
 局部文件partials
 引用天气插件
