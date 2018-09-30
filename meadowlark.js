@@ -48,6 +48,12 @@ var handlebars = require('express-handlebars').create({
 //添加static中间价
 app.use(express.static(__dirname + '/public'));
 
+//添加post请求插件
+//app.use(require('body-parser')());
+var bodyparser = require('body-parser');
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended:false}));
+
 //设置handlebars视图引擎
 app.engine('hbs',handlebars.engine);
 // app.engine('hbs', handlebars({
@@ -108,6 +114,32 @@ app.get('/data/nursery-rhyme', function(req, res){
         });
 });
 
+//express表单处理
+app.get('/newsletter',function(req,res){
+	res.render('newsletter',{csrf: 'CSRF token goes here'});
+});
+app.post('/process',function(req,res){
+	console.log('Form(from querystring):' + req.query.form);
+	console.log('csrk token:' + req.body._csrf);
+	console.log('name:' + req.body.name);
+	console.log('email:' + req.body.email);
+	res.redirect(303,'/');
+});
+
+//处理ajax表单
+app.get('/newsletter1',function(req,res){
+	res.render('newsletter1',{csrf: 'CSRF token goes here'});
+});
+app.post('/process1',function(req,res){
+	if(req.xhr || req.accepts('json,html') === 'json'){
+		//如果发生错误，应该发送error
+		res.send({success:true});
+		console.log(req.body);
+	}else{
+		//如果发生错误，应该重定向到错误页面
+		res.redirect(303,'/about');
+	}
+})
 
 //定制404页面
 app.use(function(req,res,next){

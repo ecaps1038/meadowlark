@@ -21,3 +21,6 @@ cp node_modules/chai/chai.js public/vendor
 
 局部文件partials
 引用天气插件
+
+使用POST（推荐使用的），需要引入中间件来解析URL 编码体。首先，安装body-parser
+中间件（npm install --save body-parser），然后引入：app.use(require('body-parser')());
