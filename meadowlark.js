@@ -30,6 +30,12 @@ function getWeatherData(){
 var express = require('express');
 //var handlebars = require('express-handlebars');
 
+//添加post请求插件
+var bodyparser = require('body-parser');
+
+//添加文件传输插件
+var formidable = require('formidable');
+
 
 var app = express();
 
@@ -48,9 +54,6 @@ var handlebars = require('express-handlebars').create({
 //添加static中间价
 app.use(express.static(__dirname + '/public'));
 
-//添加post请求插件
-//app.use(require('body-parser')());
-var bodyparser = require('body-parser');
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
 
@@ -90,7 +93,6 @@ app.get('/jquery',function(req,res){
 });
 app.get('/about', function(req, res){ 
     res.render('about',{
-    	
     	pageTestScript:'/qa/tests-about.js'
     });
 });
@@ -134,11 +136,32 @@ app.post('/process1',function(req,res){
 	if(req.xhr || req.accepts('json,html') === 'json'){
 		//如果发生错误，应该发送error
 		res.send({success:true});
-		console.log(req.body);
+		console.log(req.body.name);
 	}else{
 		//如果发生错误，应该重定向到错误页面
 		res.redirect(303,'/about');
 	}
+});
+
+//文件传输
+app.get('/contest/vacation-photo',function(req,res){
+	var now = new Date();
+	res.render('contest/vacation-photo',{
+		year:now.getFullYear(),month:now.getMonth()
+	});
+});
+app.post('/contest/vacation-photo/:year/:month',function(req,res){
+	var form = new formidable.IncomingForm();
+	form.parse(req,function(err,fields,files){
+		if(err){
+			return res.redirect(303,'/error');
+		}
+		console.log('获取fields');
+		console.log(fields);
+		console.log('获取files');
+		console.log(files);
+		res.redirect(303,'/');
+	})
 })
 
 //定制404页面
