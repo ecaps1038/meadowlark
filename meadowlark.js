@@ -36,6 +36,12 @@ var bodyparser = require('body-parser');
 //添加文件传输插件
 var formidable = require('formidable');
 
+//添加jQuery插件上传(未实现)
+var jqupload = require('jquery-file-upload-middleware');
+
+//添加凭证文件
+var credentials = require('./models/credentials');
+
 
 var app = express();
 
@@ -56,6 +62,9 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
+
+//添加cookie中间件
+app.use(require('cookie-parser')(credentials.cookieSecret));
 
 //设置handlebars视图引擎
 app.engine('hbs',handlebars.engine);
@@ -86,6 +95,7 @@ app.use(function(req, res, next){
 // 	res.send('<h2>你在首页里</h2>');
 // });
 app.get('/',function(req,res){
+	res.cookie('name','小芳');
 	res.render('home',{layout:null});
 });
 app.get('/jquery',function(req,res){
@@ -161,6 +171,13 @@ app.post('/contest/vacation-photo/:year/:month',function(req,res){
 		console.log('获取files');
 		console.log(files);
 		res.redirect(303,'/');
+	})
+});
+
+//cookie测试
+app.get('/cookie',function(req,res){
+	res.render('testcookie',{
+		name : req.cookies.name
 	})
 })
 

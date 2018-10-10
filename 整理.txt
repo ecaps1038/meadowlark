@@ -24,3 +24,10 @@ cp node_modules/chai/chai.js public/vendor
 
 使用POST（推荐使用的），需要引入中间件来解析URL 编码体。首先，安装body-parser
 中间件（npm install --save body-parser），然后引入：app.use(require('body-parser')());
+
+jQuery 上传包，安装jquery-file-upload-middleware 包（npm install--save jquery-file-upload-middleware），
+
+
+cookie与会话
+cookie需要先引入中间件cookie-parser。首先npminstall --save cookie-parser
+app.use(require('cookie-parser')(credentials.cookieSecret));
