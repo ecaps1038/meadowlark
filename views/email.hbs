@@ -1,0 +1,26 @@
+<h2>邮件发送</h2>
+<form class="form-horizontal" role="form" method="POST" action="/emailsend">
+	<div class="form-group">
+		<label for="email" class="col-sm-2 control-label">发送给</label>
+		<div class="col-sm-4">
+			<input type="email" class="form-control" name="email">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="title" class="col-sm-2 control-label">标题</label>
+		<div class="col-sm-4">
+			<input type="text" class="form-control" name="title">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="main" class="col-sm-2 control-label">内容</label>
+		<div class="col-sm-4">
+			<textarea name="main"></textarea>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-4">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</div>
+	</div>
+</form>

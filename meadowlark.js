@@ -42,6 +42,17 @@ var jqupload = require('jquery-file-upload-middleware');
 //添加凭证文件
 var credentials = require('./models/credentials');
 
+//引入邮箱插件
+var nodemailer = require('nodemailer');
+//创建传输方式
+var transporter = nodemailer.createTransport({
+	service: 'qq',
+	auth: {
+		user: credentials.qq.user,
+		pass: credentials.qq.pass
+	}
+});
+
 
 var app = express();
 
@@ -63,8 +74,14 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended:false}));
 
-//添加cookie中间件
+//添加cookie中间件和session
 app.use(require('cookie-parser')(credentials.cookieSecret));
+app.use(require('express-session')({
+	name: 'yike',
+	secret: 'abc_def',
+	resave: true,
+	cookie: {maxAge:60*1000,httpOnly:true}
+}));
 
 //设置handlebars视图引擎
 app.engine('hbs',handlebars.engine);
@@ -96,6 +113,7 @@ app.use(function(req, res, next){
 // });
 app.get('/',function(req,res){
 	res.cookie('name','小芳');
+	res.cookie('about','关于我的事情好多',{signed:true, maxAge: 5000});
 	res.render('home',{layout:null});
 });
 app.get('/jquery',function(req,res){
@@ -176,9 +194,79 @@ app.post('/contest/vacation-photo/:year/:month',function(req,res){
 
 //cookie测试
 app.get('/cookie',function(req,res){
-	res.render('testcookie',{
-		name : req.cookies.name
-	})
+ 	if(req.session.isFirst || req.cookies.isFirst){
+ 		res.render('testcookie',{
+ 			well : '再次访问',
+			name : req.cookies.name,
+			about: req.signedCookies.about
+		});	
+ 	}else{
+ 		req.session.isFirst = 1;
+ 		res.cookie('isFirst',1,{maxAge:10000,signed:true});
+ 		res.render('testcookie',{
+ 			well : '第一次访问',
+			name : req.cookies.name,
+			about: req.signedCookies.about
+		});	
+ 	}
+});
+
+//邮件发送测试
+app.get('/send',function(req,res,next){
+	var options = {
+		from : '1334785356@qq.com',
+		to : '2098933249@qq.com',
+		subject : '来自我express mail 测试',
+		text : '来自我express mail 测试',
+		html : '<h3>你好，我来看下。</h3><p style="font-size:30px">哈哈</p><p><img src="cid:00001"/></p>',
+		attachments: [
+			{
+				filename: 'logo.jpg',
+				path: 'public/img/logo.jpg',
+				cid: '00001'
+			},
+			{
+				filename: '123.jpg',
+				path: 'public/img/123.jpg',
+				cid: '00002'
+			},
+		]
+	};
+	transporter.sendMail(options,function(err,msg){
+		if(err){
+			console.log(err);
+			res.render('send',{title: '发生错误'});
+		}else{
+			console.log(msg);
+			res.render('send',{title:'发送成功！'+msg.accepted})
+		}
+	});
+});
+
+app.get('/email',function(req,res){
+	res.render('email');
+})
+app.post('/emailsend',function(req,res){
+	if(!req.session.isFirst){
+		next(new Error('没有访问coosie'));
+	}
+	var title = req.body.title , email = req.body.email , main = req.body.main;
+	var options = {
+		from : '1334785356@qq.com',
+		to : email,
+		subject : title,
+		text : title,
+		html : main
+	};
+	transporter.sendMail(options,function(err,msg){
+		if(err){
+			console.log(err);
+			res.render('send',{title: '发生错误'});
+		}else{
+			console.log(msg);
+			res.render('send',{title:'发送成功！'+msg.accepted})
+		}
+	});
 })
 
 //定制404页面
