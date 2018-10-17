@@ -49,6 +49,9 @@ cookie : 设置存放sessionid的cookie的相关选项
 邮箱：kqpkppucbnnxbahb
 安装Nodemailer 包：npm install --save nodemailer
 
+添加mongodb数据库插件
+npm install --save mongoose
+
 
 git
 

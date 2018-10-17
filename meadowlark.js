@@ -178,18 +178,9 @@ app.get('/contest/vacation-photo',function(req,res){
 		year:now.getFullYear(),month:now.getMonth()
 	});
 });
+var fileServe = require('./lib/file');
 app.post('/contest/vacation-photo/:year/:month',function(req,res){
-	var form = new formidable.IncomingForm();
-	form.parse(req,function(err,fields,files){
-		if(err){
-			return res.redirect(303,'/error');
-		}
-		console.log('获取fields');
-		console.log(fields);
-		console.log('获取files');
-		console.log(files);
-		res.redirect(303,'/');
-	})
+	fileServe.form(req,res);
 });
 
 //cookie测试
@@ -245,12 +236,15 @@ app.get('/send',function(req,res,next){
 
 app.get('/email',function(req,res){
 	res.render('email');
-})
+});
+
+// var emailService = require('./lib/email.js')(credentials);
 app.post('/emailsend',function(req,res){
-	if(!req.session.isFirst){
-		next(new Error('没有访问coosie'));
-	}
+	// if(!req.session.isFirst){
+	// 	next(new Error('没有访问coosie'));
+	// }
 	var title = req.body.title , email = req.body.email , main = req.body.main;
+	// emailService.send(email,title,main);
 	var options = {
 		from : '1334785356@qq.com',
 		to : email,
