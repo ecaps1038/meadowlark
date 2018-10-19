@@ -51,6 +51,8 @@ cookie : 设置存放sessionid的cookie的相关选项
 
 添加mongodb数据库插件
 npm install --save mongoose
+启动mongodb   mongod.exe --dbpath=D:\mongoDB\data
+进入db 打开另一个输入：  mongo    或访问http://localhost:27017
 
 
 git

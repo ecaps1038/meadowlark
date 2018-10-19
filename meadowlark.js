@@ -261,6 +261,56 @@ app.post('/emailsend',function(req,res){
 			res.render('send',{title:'发送成功！'+msg.accepted})
 		}
 	});
+});
+
+//链接数据库操作
+var Vacation = require('./models/vacation.js');
+app.get('/vacations',function(req,res){
+	Vacation.find({ available: true }, function(err, vacations){
+		var context = {
+			vacations: vacations.map(function(vacation){
+				return {
+					sku: vacation.sku,
+					name: vacation.name,
+					description: vacation.description,
+					price: vacation.getDisplayPrice(),
+					inSeason: vacation.inSeason,
+				}
+			})
+		};
+		res.render('vacations', context);
+	});
+});
+
+//添加数据库
+var Listener = require('./models/listener.js');
+app.get('/listener',function(req,res){
+	console.log(req.query.sku);
+	res.render('listener',{sku:req.query.sku});
+});
+app.post('/listener',function(req,res){
+	Listener.updateOne(
+		{email: req.body.email},
+		{$push:{skus:req.body.sku}},
+		{upsert:true},
+		function(err){
+			if(err) {
+				console.error(err.stack);
+				req.session.flash = {
+					type: 'danger',
+					intro: 'Ooops!',
+					message: 'There was an error processing your request.',
+				};
+				return res.redirect(303, '/vacations');
+			}
+			req.session.flash = {
+				type: 'success',
+				intro: 'Thank you!',
+				message: 'You will be notified when this vacation is in season.',
+			};
+			return res.redirect(303, '/vacations');
+		}
+	)
 })
 
 //定制404页面
