@@ -54,6 +54,17 @@ npm install --save mongoose
 启动mongodb   mongod.exe --dbpath=D:\mongoDB\data
 进入db 打开另一个输入：  mongo    或访问http://localhost:27017
 
+组织路由原则
+1.给路由处理器用命名函数
+2.路由不应该神秘
+3.路由组织应该是可扩展的
+4.不要忽视自动化的基于视图的路由处理器
+
+在模块中声明路由
+建立routes.js文件，放置路由
+
+jQuery 遍历 - map() 方法
+
 
 git
 

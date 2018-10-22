@@ -106,30 +106,10 @@ app.use(function(req, res, next){
 	next();
 });
 
-//添加路由
-// app.get('/',function(req,res){
-// 	res.type('text/html');
-// 	res.send('<h2>你在首页里</h2>');
-// });
-app.get('/',function(req,res){
-	res.cookie('name','小芳');
-	res.cookie('about','关于我的事情好多',{signed:true, maxAge: 5000});
-	res.render('home',{layout:null});
-});
-app.get('/jquery',function(req,res){
-	res.render('jquerytest');
-});
-app.get('/about', function(req, res){ 
-    res.render('about',{
-    	pageTestScript:'/qa/tests-about.js'
-    });
-});
-app.get('/tours/hood-river',function(req,res){
-	res.render('tours/hood-river');
-});
-app.get('/tours/request-group-rate',function(req,res){
-	res.render('tours/request-group-rate');
-});
+
+//汇总路由文件routes.js
+require('./routes.js')(app);
+
 
 //段落
 app.get('/nursery-rhyme', function(req, res){
@@ -311,7 +291,38 @@ app.post('/listener',function(req,res){
 			return res.redirect(303, '/vacations');
 		}
 	)
+});
+
+//路由参数
+var staff = {
+mitch: { bio: 'Mitch is the man to have at your back in a bar fight.' },
+madeline: { bio: 'Madeline is our Oregon expert.' },
+walt: { bio: 'Walt is our Oregon Coast expert.' },
+};
+//访问http://127.0.0.1:3000/staff/mitch
+app.get('/staff/:name', function(req, res, next){
+var info = staff[req.params.name];
+console.log(req.params.name);
+console.log(info.bio);
+if(!info) return next(); // 最终将会落入 404
+res.render('home', info);
 })
+
+//自动化渲染视图
+var autoViews = {};
+var fs = require('fs');
+app.use(function(req,res,next){
+	var path = req.path.toLowerCase();
+	// 检查缓存；如果它在那里，渲染这个视图
+	if(autoViews[path]) return res.render(autoViews[path]);
+	// 如果它不在缓存里，那就看看有没有.handlebars 文件能匹配
+	if(fs.existsSync(__dirname + '/views' + path + '.hbs')){
+		autoViews[path] = path.replace(/^\//, '');
+		return res.render(autoViews[path]);
+	}
+	// 没发现视图；转到404 处理器
+	next();
+});
 
 //定制404页面
 app.use(function(req,res,next){
