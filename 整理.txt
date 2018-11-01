@@ -64,6 +64,10 @@ npm install --save mongoose
 建立routes.js文件，放置路由
 
 jQuery 遍历 - map() 方法
+js  遍历 for (var key in obj) {}
+
+js声明严格模式"use strict";
+js  Object的hasOwnProperty()方法返回一个布尔值，判断对象是否包含特定的自身（非继承）属性。
 
 
 git
