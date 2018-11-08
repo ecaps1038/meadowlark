@@ -165,7 +165,7 @@ app.post('/contest/vacation-photo/:year/:month',function(req,res){
 
 //cookie测试
 app.get('/cookie',function(req,res){
- 	if(req.session.isFirst || req.cookies.isFirst){
+ 	if(req.session.isFirst || req.signedCookies.isFirst){
  		res.render('testcookie',{
  			well : '再次访问',
 			name : req.cookies.name,

@@ -1,4 +1,4 @@
-app.get 是我们添加路由的方法。
+3app.get 是我们添加路由的方法。
 
 app.use 是Express 添加中间件的一种方法。
 现在你可以把它看作处理所有没有路由匹配路径的处理器
@@ -49,10 +49,14 @@ cookie : 设置存放sessionid的cookie的相关选项
 邮箱：kqpkppucbnnxbahb
 安装Nodemailer 包：npm install --save nodemailer
 
+
+**********mongodb数据库**********
+
 添加mongodb数据库插件
 npm install --save mongoose
-启动mongodb   mongod.exe --dbpath=D:\mongoDB\data
+启动mongodb（windows下）   mongod.exe --dbpath=D:\mongoDB\data
 进入db 打开另一个输入：  mongo    或访问http://localhost:27017
+
 
 组织路由原则
 1.给路由处理器用命名函数
@@ -71,5 +75,10 @@ js  Object的hasOwnProperty()方法返回一个布尔值，判断对象是否包
 
 
 git
+
+创建指针 git branch dev 切换指针git checkout dev  查看当前分支git branch   合并指定分支到当前分支
+git merge dev(必须到其他分支上)   删除分支git branch -d dev   创建远程分支git checkout -b dev origin/dev
+
+更新本地与远程git pull  与远程分支链接$ git branch --set-upstream-to=origin/dev dev
 
 git status  git add -A    git commit -m "aaa"    $ git push -u origin master
